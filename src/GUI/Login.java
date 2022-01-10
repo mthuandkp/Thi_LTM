@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -116,7 +114,7 @@ public class Login extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(115, 82, 246));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("Nhập Tên Của Bạn:");
+        jLabel4.setText("Nhập Nickname Của Bạn:");
 
         uname.setFont(new java.awt.Font("Arimo", 0, 24)); // NOI18N
         uname.setForeground(new java.awt.Color(115, 82, 246));
@@ -187,7 +185,7 @@ public class Login extends javax.swing.JFrame {
             sms.setText("Vui lòng nhập tên người dùng");
             return;
         }
-        if (checkRegex(name, Pattern.compile("[^A-Za-z0-9]\\s", Pattern.CASE_INSENSITIVE))) {
+        if (checkRegex(removeVn(name), Pattern.compile("[^A-Za-z0-9]", Pattern.CASE_INSENSITIVE))) {
             sms.setText("Tên không được chứa ký tự đặc biệt");
             return;
         }
@@ -211,11 +209,10 @@ public class Login extends javax.swing.JFrame {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
     }//GEN-LAST:event_joinChatBtnMouseClicked
 
-    public static boolean checkRegex(String emailStr, Pattern pt) {
-        Matcher matcher = pt.matcher(emailStr);
+    public static boolean checkRegex(String Str, Pattern pt) {
+        Matcher matcher = pt.matcher(Str);
         return matcher.find();
     }
 
@@ -323,6 +320,68 @@ public class Login extends javax.swing.JFrame {
         }
     }
 
+    private String removeVn(String input) {
+        char []result = input.toLowerCase().replaceAll("\\s++","").toCharArray();
+        char []aVN = {'á', 'à', 'ả', 'ã', 'ạ', 'ắ', 'ằ', 'ẳ', 'ẵ', 'ặ', 'ă', 'â', 'ấ', 'ầ', 'ẩ', 'ẫ', 'ậ'};
+        char []dVN = {'đ'};
+        char []eVN = {'é', 'è', 'ẻ', 'ẽ', 'ẹ', 'ê', 'ế', 'ề', 'ể', 'ễ', 'ệ'};
+        char []iVN = {'í', 'ì', 'ỉ', 'ĩ', 'ị'};
+        char []oVN = {'ó', 'ò', 'ỏ', 'õ', 'ọ', 'ô', 'ố', 'ồ', 'ổ', 'ỗ', 'ộ', 'ơ', 'ớ', 'ờ', 'ở', 'ỡ', 'ợ'};
+        char []uVN = {'ú', 'ù', 'ủ', 'ũ', 'ụ', 'ư', 'ứ', 'ừ', 'ử', 'ữ', 'ự'};
+        char []yVN = {'ý', 'ỳ', 'ỷ', 'ỹ', 'ỵ'};
+        String rs = "";
+        
+        for(int i = 0;i < result.length;i++){
+            for(char a : aVN){
+                if(result[i] == a){
+                    result[i] = 'a';
+                }
+                continue;
+            }
+            for(char a : dVN){
+                if(result[i] == a){
+                    result[i] = 'd';
+                }
+                continue;
+            }
+            for(char a : eVN){
+                if(result[i] == a){
+                    result[i] = 'e';
+                }
+                continue;
+            }
+            for(char a : iVN){
+                if(result[i] == a){
+                    result[i] = 'i';
+                }
+                continue;
+            }
+            for(char a : oVN){
+                if(result[i] == a){
+                    result[i] = 'o';
+                }
+                continue;
+            }
+            for(char a : uVN){
+                if(result[i] == a){
+                    result[i] = 'u';
+                }
+                continue;
+            }
+            for(char a : yVN){
+                if(result[i] == a){
+                    result[i] = 'y';
+                }
+                continue;
+            }
+        }
+        
+        for(char a : result){
+            rs += a;
+        }
+        return rs;     
+    }
+
     private class readIO implements Runnable {
 
         BufferedReader input;
@@ -365,7 +424,8 @@ public class Login extends javax.swing.JFrame {
                     break;
                 }
                 case "INVITE_CONNECT": {
-                    int choose = JOptionPane.showConfirmDialog(null, "Bạn có muốn chat với " + json.getString("data") + " ?", "Xác nhận chat", JOptionPane.YES_NO_OPTION);
+                    int choose = JOptionPane.showConfirmDialog(null, "Bạn có muốn chat với " + json.getString("data")
+                            + " ?", "Xác nhận chat", JOptionPane.YES_NO_OPTION);
                     if (choose == 0) {
                         // Chap nhan ket noi
                         sms.setText("Vui lòng chờ đối phương xác nhận...");
@@ -416,7 +476,8 @@ public class Login extends javax.swing.JFrame {
 
                     chatroom.addWindowListener(new WindowAdapter() {
                         public void windowClosing(WindowEvent we) {
-                            int choose = JOptionPane.showConfirmDialog(null, "Bạn có muốn kết thúc việc chat ở đây không ? Mọi tin nhắn sẽ bị xóa !!!", "Xác nhận", JOptionPane.YES_NO_OPTION);
+                            int choose = JOptionPane.showConfirmDialog(null, "Bạn có muốn kết thúc việc chat ở đây không ? Mọi tin nhắn sẽ bị xóa !!!"
+                                    , "Xác nhận", JOptionPane.YES_NO_OPTION);
                             if (choose == 0) {
                                 try {
                                     BufferedWriter output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -449,6 +510,15 @@ public class Login extends javax.swing.JFrame {
                     if (chatroom != null) {
                         chatroom.addMessReceive(json.getString("username"), json.getString("mess"));
                     }
+                    break;
+                }
+                case "CAN_NOT_FIND_OTHER_USER":{
+                    JOptionPane.showMessageDialog(null, "Đối phương không còn trên hệ thống");
+                    if (chatroom != null) {
+                        chatroom.terminal();
+                    }
+                    sms.setText("Vui lòng chờ....");
+                    break;
                 }
             }
         }

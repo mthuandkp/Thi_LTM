@@ -6,6 +6,7 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.ComponentOrientation;
 import javax.swing.JScrollBar;
 
 /**
@@ -13,7 +14,6 @@ import javax.swing.JScrollBar;
  * @author mthuan
  */
 public class RightMess extends javax.swing.JPanel {
-
     /**
      * Creates new form LeftMess
      */
@@ -48,6 +48,7 @@ public class RightMess extends javax.swing.JPanel {
         username = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
 
+        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(115, 82, 246)));
         setPreferredSize(new java.awt.Dimension(480, 159));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -61,7 +62,7 @@ public class RightMess extends javax.swing.JPanel {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 159, Short.MAX_VALUE)
+            .addGap(0, 157, Short.MAX_VALUE)
         );
 
         add(jPanel1);
@@ -81,11 +82,11 @@ public class RightMess extends javax.swing.JPanel {
         textPanel.setLayout(textPanelLayout);
         textPanelLayout.setHorizontalGroup(
             textPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollText, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+            .addComponent(scrollText, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
         );
         textPanelLayout.setVerticalGroup(
             textPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollText, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+            .addComponent(scrollText, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
         );
 
         contentPane.add(textPanel, java.awt.BorderLayout.CENTER);
@@ -104,7 +105,7 @@ public class RightMess extends javax.swing.JPanel {
             usernamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(usernamePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(username, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE))
+                .addComponent(username, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE))
         );
         usernamePanelLayout.setVerticalGroup(
             usernamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,7 +127,7 @@ public class RightMess extends javax.swing.JPanel {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 159, Short.MAX_VALUE)
+            .addGap(0, 157, Short.MAX_VALUE)
         );
 
         add(jPanel3);
@@ -147,6 +148,7 @@ public class RightMess extends javax.swing.JPanel {
     private void initDisplay() {
         content.setEditable(false);
         content.setLineWrap(true);
+        content.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         scrollText.getViewport().setBackground(Color.WHITE);
         JScrollBar vertical = scrollText.getVerticalScrollBar();
         vertical.setValue(0);

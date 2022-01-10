@@ -5,20 +5,14 @@
  */
 package GUI;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
@@ -43,7 +37,6 @@ public class Chat_Room extends javax.swing.JFrame {
     public Chat_Room() {
         initComponents();
         initDisplay();
-        initSocket();
     }
 
     public Chat_Room(Socket s, String n) {
@@ -51,7 +44,6 @@ public class Chat_Room extends javax.swing.JFrame {
         this.name = n;
         initComponents();
         initDisplay();
-        initSocket();
 
     }
 
@@ -98,7 +90,7 @@ public class Chat_Room extends javax.swing.JFrame {
         date.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         date.setText("28/01/2001");
 
-        uname.setFont(new java.awt.Font("Arimo", 1, 36)); // NOI18N
+        uname.setFont(new java.awt.Font("Arimo", 1, 24)); // NOI18N
         uname.setForeground(new java.awt.Color(252, 232, 130));
         uname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         uname.setText("jLabel1");
@@ -114,13 +106,13 @@ public class Chat_Room extends javax.swing.JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(6, 6, 6)
                 .addComponent(uname)
-                .addGap(49, 49, 49)
+                .addGap(55, 55, 55)
                 .addComponent(date)
                 .addGap(18, 18, 18)
                 .addComponent(time)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         jPanel2.add(jPanel3, java.awt.BorderLayout.PAGE_START);
@@ -258,8 +250,9 @@ public class Chat_Room extends javax.swing.JFrame {
             conn = new Container();
         }
 
-        JPanel newMess = new RightMess(name, mess);
-
+        //JPanel newMess = new RightMess(name, mess);
+        JPanel newMess = new RightMess("Bạn", mess);
+        
         conn.add(newMess);
         conn.setLayout(new BoxLayout(conn, BoxLayout.Y_AXIS));
 
@@ -280,6 +273,7 @@ public class Chat_Room extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        inputChat.setText("");
     }//GEN-LAST:event_sendBtnMouseClicked
 
     /**
@@ -347,15 +341,6 @@ public class Chat_Room extends javax.swing.JFrame {
         new Thread(new TimeCal()).start();
     }
 
-    private void initSocket() {
-       
-        /*try {
-            socket = new Socket("127.0.0.1", 8888);
-        } catch (IOException ex) {
-            Logger.getLogger(Chat_Room.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-    }
-
     void terminal() {
         this.dispose();
     }
@@ -398,5 +383,8 @@ public class Chat_Room extends javax.swing.JFrame {
         conn.setLayout(new BoxLayout(conn, BoxLayout.Y_AXIS));
 
         messagePane.getViewport().setView(conn);
+        JScrollBar vertical = messagePane.getVerticalScrollBar();
+        vertical.setValue(vertical.getMaximum());
+        
     }
 }

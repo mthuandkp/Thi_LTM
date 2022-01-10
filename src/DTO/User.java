@@ -70,7 +70,5 @@ public class User {
     @Override
     public String toString() {
         return "User{" + "socket=" + socket + ", username=" + username + ", status=" + status + ", connectWith=" + connectWith + ", rejectUser=" + rejectUser + '}';
-    }
-    
-            
+    }            
 }

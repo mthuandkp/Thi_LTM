@@ -171,7 +171,7 @@
                   <Color blue="f6" green="52" red="73" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Nh&#x1ead;p T&#xea;n C&#x1ee7;a B&#x1ea1;n:"/>
+                <Property name="text" type="java.lang.String" value="Nh&#x1ead;p Nickname C&#x1ee7;a B&#x1ea1;n:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="uname">

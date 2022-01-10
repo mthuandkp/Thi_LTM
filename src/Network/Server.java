@@ -8,7 +8,6 @@ package Network;
 import DTO.User;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
@@ -19,8 +18,6 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONObject;
 
 /**
@@ -70,7 +67,6 @@ public class Server {
 
         @Override
         public synchronized void run() {
-
             if (listUser == null) {
                 listUser = new ArrayList<>();
                 return;
@@ -78,7 +74,6 @@ public class Server {
             try {
                 for (User u1 : listUser) {
                     if (u1 != null && u1.getStatus() == 0) {
-
                         //Find second client
                         for (User u2 : listUser) {
                             if (u2 != null && u1 != u2 && u2.getStatus() == 0) {
@@ -241,7 +236,9 @@ public class Server {
                         currentUser.getRejectUser().add(connectUser.getUsername());
                         if (connectUser.getStatus() == 2) {
                             try {
-                                BufferedWriter output = new BufferedWriter(new OutputStreamWriter(connectUser.getSocket().getOutputStream()));
+                                BufferedWriter output = new BufferedWriter(
+                                        new OutputStreamWriter(connectUser.getSocket()
+                                                .getOutputStream()));
                                 JSONObject returnJson = new JSONObject();
                                 returnJson.put("cmd", "CLIENT_REJECT_CONNECT");
                                 output.write(returnJson.toString());
@@ -280,7 +277,7 @@ public class Server {
 
                         executor.execute(new conectTwoClient());
                         return returnJson.toString();
-                    } else if (connectUser.getStatus() == 0) {
+                    } else if (connectUser.getStatus() == 0 || connectUser.getConnectWith() != currentUser.getSocket()) {
                         currentUser.setStatus(0);
                         currentUser.setConnectWith(null);
                         currentUser.getRejectUser().add(connectUser.getUsername());
@@ -298,12 +295,14 @@ public class Server {
                         currentUser.setStatus(3);
                         connectUser.setStatus(3);
                         System.out.println("Connect two user");
-                            System.out.println(currentUser);
-                            System.out.println(connectUser + "\n\n");
+                        System.out.println(currentUser);
+                        System.out.println(connectUser + "\n\n");
                         JSONObject connectJson = new JSONObject();
                         connectJson.put("cmd", "CLIENT_CONNECTED");
                         try {
-                            BufferedWriter output = new BufferedWriter(new OutputStreamWriter(connectUser.getSocket().getOutputStream()));
+                            BufferedWriter output = new BufferedWriter(
+                                    new OutputStreamWriter(connectUser.getSocket()
+                                            .getOutputStream()));
                             output.write(connectJson.toString());
                             output.newLine();
                             output.flush();
@@ -338,36 +337,58 @@ public class Server {
                     connectUser.getRejectUser().add(currentUser.getUsername());
                     //Gui tinh hieu thoat chat
                     try {
-                        BufferedWriter ouput = new BufferedWriter(new OutputStreamWriter(connectUser.getSocket().getOutputStream()));
+                        BufferedWriter ouput = new BufferedWriter(
+                                new OutputStreamWriter(connectUser.getSocket()
+                                        .getOutputStream()));
                         JSONObject returnJson = new JSONObject();
                         returnJson.put("cmd", "END_CHAT");
                         ouput.write(returnJson.toString());
                         ouput.newLine();
                         ouput.flush();
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
+                    executor.execute(new conectTwoClient());
                 }
                 case "CHAT_MESSAGE": {
                     System.out.println("Send mess from to");
-                            
-                            
                     User currentUser = getUser(socket);
                     if (currentUser != null) {
                         System.out.println(currentUser + "\n");
                         User connectUser = getUser(currentUser.getConnectWith());
                         if (connectUser != null) {
                             System.out.println(connectUser + "\n");
-                           
+
                             JSONObject returnJson = new JSONObject();
                             returnJson.put("cmd", "ADD_NEW_MESS");
                             returnJson.put("mess", json.getString("data"));
                             returnJson.put("username", currentUser.getUsername());
 
                             try {
-                                BufferedWriter output = new BufferedWriter(new OutputStreamWriter(connectUser.getSocket().getOutputStream()));
+                                BufferedWriter output = new BufferedWriter(
+                                        new OutputStreamWriter(connectUser.getSocket()
+                                                .getOutputStream()));
                                 output.write(returnJson.toString());
                                 output.newLine();
                                 output.flush();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            //Dat lại trang thai ban dau
+                            currentUser.setStatus(0);
+                            currentUser.setConnectWith(null);
+
+                            //Gui tinh hieu thoat chat
+                            try {
+                                BufferedWriter ouput = new BufferedWriter(
+                                        new OutputStreamWriter(currentUser.getSocket()
+                                                .getOutputStream()));
+                                JSONObject returnJson = new JSONObject();
+                                returnJson.put("cmd", "CAN_NOT_FIND_OTHER_USER");
+                                ouput.write(returnJson.toString());
+                                ouput.newLine();
+                                ouput.flush();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
